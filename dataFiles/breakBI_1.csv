@@ -1,0 +1,67 @@
+﻿RTU,CARD,,
+490-RTU,i0000104aCARD,,
+,,,
+Description,RowID,Component,Attribute
+RTU COMMS              ,i0000fdf7SROW,DIG-490-1-01-200780,Digital Scanned Value,Associated Scanned Value
+7105.0,i0000fdfcSROW,DIG-490-1-02-200781,Digital Scanned Value,Associated Scanned Value
+7108.0,i0000fe01SROW,DIG-490-1-03-200782,Digital Scanned Value,Associated Scanned Value
+7111.0,i0000fe06SROW,DIG-490-1-04-200783,Digital Scanned Value,Associated Scanned Value
+GT FAULT TRIP          ,i0000fe0bSROW,DIG-490-1-05-200784,Digital Scanned Value,Associated Scanned Value
+7107.0 MDR71           ,i0000fe10SROW,DIG-490-1-06-200785,Digital Scanned Value,Associated Scanned Value
+7109.0 WFD71           ,i0000fe15SROW,DIG-490-1-07-200786,Digital Scanned Value,Associated Scanned Value
+HPS P.S ISLANDING      ,i0000fe1aSROW,DIG-490-1-08-200787,Digital Scanned Value,Associated Scanned Value
+3105.0 GT102           ,i0000fe1fSROW,DIG-490-1-09-200788,Digital Scanned Value,Associated Scanned Value
+3108.0 GT103           ,i0000fe24SROW,DIG-490-1-10-200789,Digital Scanned Value,Associated Scanned Value
+3111.0 GT104           ,i0000fe29SROW,DIG-490-1-11-200790,Digital Scanned Value,Associated Scanned Value
+7110.0 BUS COUPLER     ,i0000fe2eSROW,DIG-490-1-12-200791,Digital Scanned Value,Associated Scanned Value
+7105.4A                ,i0000fe33SROW,DIG-490-1-13-200792,Digital Scanned Value,Associated Scanned Value
+7105.4B                ,i0000fe38SROW,DIG-490-1-14-200793,Digital Scanned Value,Associated Scanned Value
+7108.4A                ,i0000fe3dSROW,DIG-490-1-15-200794,Digital Scanned Value,Associated Scanned Value
+7108.4B                ,i0000fe42SROW,DIG-490-1-16-200795,Digital Scanned Value,Associated Scanned Value
+7111.4A                ,i0000fe47SROW,DIG-490-1-17-200796,Digital Scanned Value,Associated Scanned Value
+7111.4B                ,i0000fe4cSROW,DIG-490-1-18-200797,Digital Scanned Value,Associated Scanned Value
+7107.4A                ,i0000fe51SROW,DIG-490-1-19-200801,Digital Scanned Value,Associated Scanned Value
+7107.4B                ,i0000fe56SROW,DIG-490-1-20-200802,Digital Scanned Value,Associated Scanned Value
+7107.5,i0000fe5bSROW,DIG-490-1-21-200807,Digital Scanned Value,Associated Scanned Value
+7107.7,i0000fe60SROW,DIG-490-1-22-200809,Digital Scanned Value,Associated Scanned Value
+7109.4A                ,i0000fe65SROW,DIG-490-1-23-200803,Digital Scanned Value,Associated Scanned Value
+7109.4B                ,i0000fe6aSROW,DIG-490-1-24-200804,Digital Scanned Value,Associated Scanned Value
+7109.5,i0000fe6fSROW,DIG-490-1-25-200808,Digital Scanned Value,Associated Scanned Value
+7109.7,i0000fe74SROW,DIG-490-1-26-200810,Digital Scanned Value,Associated Scanned Value
+7110.4A                ,i0000fe79SROW,DIG-490-1-27-200805,Digital Scanned Value,Associated Scanned Value
+7110.4B                ,i0000fe7eSROW,DIG-490-1-28-200806,Digital Scanned Value,Associated Scanned Value
+7113.0,i0000fe83SROW,DIG-490-1-29-200820,Digital Scanned Value,Associated Scanned Value
+7113.4A                ,i0000fe88SROW,DIG-490-1-30-200821,Digital Scanned Value,Associated Scanned Value
+7113.4B                ,i0000fe8dSROW,DIG-490-1-31-200822,Digital Scanned Value,Associated Scanned Value
+7113.5,i0000fe92SROW,DIG-490-1-32-200823,Digital Scanned Value,Associated Scanned Value
+7113.7,i0000fe97SROW,DIG-490-1-33-200824,Digital Scanned Value,Associated Scanned Value
+7104.4A                ,i0000fe9cSROW,DIG-490-1-34-200825,Digital Scanned Value,Associated Scanned Value
+7104.4B                ,i0000fea1SROW,DIG-490-1-35-200826,Digital Scanned Value,Associated Scanned Value
+3308.0 GT301           ,i0000fea6SROW,DIG-490-1-36-200827,Digital Scanned Value,Associated Scanned Value
+GT301 FREQUENCY CONTROL,i0000feabSROW,DIG-490-1-37-200828,Digital Scanned Value,Associated Scanned Value
+3303.0 GT302           ,i0000feb0SROW,DIG-490-1-38-200829,Digital Scanned Value,Associated Scanned Value
+GT302 FREQUENCY CONTROL,i0000feb5SROW,DIG-490-1-39-200830,Digital Scanned Value,Associated Scanned Value
+7307.0,i0000febaSROW,DIG-490-1-40-200831,Digital Scanned Value,Associated Scanned Value
+7307.4A                ,i0000febfSROW,DIG-490-1-41-200832,Digital Scanned Value,Associated Scanned Value
+7307.4B                ,i0000fec4SROW,DIG-490-1-42-200833,Digital Scanned Value,Associated Scanned Value
+7307.5,i0000fec9SROW,DIG-490-1-43-200834,Digital Scanned Value,Associated Scanned Value
+7307.7,i0000feceSROW,DIG-490-1-44-200835,Digital Scanned Value,Associated Scanned Value
+7308.0,i0000fed3SROW,DIG-490-1-45-200836,Digital Scanned Value,Associated Scanned Value
+7308.4A                ,i0000fed8SROW,DIG-490-1-46-200837,Digital Scanned Value,Associated Scanned Value
+7308.4B                ,i0000feddSROW,DIG-490-1-47-200838,Digital Scanned Value,Associated Scanned Value
+7303,i0000fee2SROW,DIG-490-1-48-200839,Digital Scanned Value,Associated Scanned Value
+7303.4A                ,i0000fee7SROW,DIG-490-1-49-200840,Digital Scanned Value,Associated Scanned Value
+7303.4B                ,i0000feecSROW,DIG-490-1-50-200841,Digital Scanned Value,Associated Scanned Value
+7310,i0000fef1SROW,DIG-490-1-51-200842,Digital Scanned Value,Associated Scanned Value
+7310.4A                ,i0000fef6SROW,DIG-490-1-52-200843,Digital Scanned Value,Associated Scanned Value
+7310.4B                ,i0000fefbSROW,DIG-490-1-53-200844,Digital Scanned Value,Associated Scanned Value
+7302.4A                ,i0000ff00SROW,DIG-490-1-54-200845,Digital Scanned Value,Associated Scanned Value
+7302.4B                ,i0000ff05SROW,DIG-490-1-55-200846,Digital Scanned Value,Associated Scanned Value
+7304.4A                ,i0000ff0aSROW,DIG-490-1-56-200847,Digital Scanned Value,Associated Scanned Value
+7304.4B                ,i0000ff0fSROW,DIG-490-1-57-200848,Digital Scanned Value,Associated Scanned Value
+GT FAULT TRIP - HBI    ,i0000ff14SROW,DIG-490-1-58-200849,Digital Scanned Value,Associated Scanned Value
+GT102 FREQUENCY CONTROL,i0000ff19SROW,DIG-490-1-59-200850,Digital Scanned Value,Associated Scanned Value
+GT102 LOAD FOLLOW CNTRL,i0000ff1eSROW,DIG-490-1-60-200851,Digital Scanned Value,Associated Scanned Value
+GT102 LOAD MODE        ,i0000ff23SROW,DIG-490-1-61-200852,Digital Scanned Value,Associated Scanned Value
+GT103 FREQUENCY CONTROL,i0000ff28SROW,DIG-490-1-62-200853,Digital Scanned Value,Associated Scanned Value
+GT103 LOAD FOLLOW CNTRL,i0000ff2dSROW,DIG-490-1-63-200854,Digital Scanned Value,Associated Scanned Value

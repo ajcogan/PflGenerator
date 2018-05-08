@@ -1,0 +1,33 @@
+﻿RTU,CARD,,
+490-RTU,i00001054CARD,,
+,,,
+Description,RowID,Component,Attribute
+DEI GENERATION          ,i0000ff87SROW,ANA-490-6-01-200780,Analog Raw Scan,ICCP Associated Value
+BPS GROSS MEGAVARS      ,i0000ff8cSROW,ANA-490-6-02-200781,Analog Raw Scan,ICCP Associated Value
+IRON ORE MEGAWATTS      ,i0000ff91SROW,ANA-490-6-03-200782,Analog Raw Scan,ICCP Associated Value
+66KV A BUSBAR FREQUENCY,i0000ff96SROW,ANA-490-6-04-200783,Analog Raw Scan,ICCP Associated Value
+66KV B BUSBAR FREQUENCY,i0000ff9bSROW,ANA-490-6-05-200784,Analog Raw Scan,ICCP Associated Value
+GT102 MEGAWATTS         ,i0000ffa0SROW,ANA-490-6-06-200785,Analog Raw Scan,ICCP Associated Value
+GT102 MEGAVARS          ,i0000ffa5SROW,ANA-490-6-07-200786,Analog Raw Scan,ICCP Associated Value
+GT102 STATOR VOLTAGE    ,i0000ffaaSROW,ANA-490-6-08-200787,Analog Raw Scan,ICCP Associated Value
+GT103 MEGAWATTS         ,i0000ffafSROW,ANA-490-6-09-200788,Analog Raw Scan,ICCP Associated Value
+GT103 MEGAVARS          ,i0000ffb4SROW,ANA-490-6-10-200789,Analog Raw Scan,ICCP Associated Value
+GT103 STATOR VOLTAGE    ,i0000ffb9SROW,ANA-490-6-11-200790,Analog Raw Scan,ICCP Associated Value
+GT104 MEGAWATTS         ,i0000ffbeSROW,ANA-490-6-12-200791,Analog Raw Scan,ICCP Associated Value
+GT104 MEGAVARS          ,i0000ffc3SROW,ANA-490-6-13-200792,Analog Raw Scan,ICCP Associated Value
+GT104 STATOR VOLTAGE    ,i0000ffc8SROW,ANA-490-6-14-200793,Analog Raw Scan,ICCP Associated Value
+GT301 MEGAWATTS         ,i0000ffcdSROW,ANA-490-6-15-200794,Analog Raw Scan,ICCP Associated Value
+GT301 MEGAVARS          ,i0000ffd2SROW,ANA-490-6-16-200795,Analog Raw Scan,ICCP Associated Value
+GT301 STATOR VOLTAGE    ,i0000ffd7SROW,ANA-490-6-17-200796,Analog Raw Scan,ICCP Associated Value
+GT302 MEGAWATTS         ,i0000ffdcSROW,ANA-490-6-18-200797,Analog Raw Scan,ICCP Associated Value
+GT302 MEGAVARS          ,i0000ffe1SROW,ANA-490-6-19-200798,Analog Raw Scan,ICCP Associated Value
+GT302 STATOR VOLTAGE    ,i0000ffe6SROW,ANA-490-6-20-200799,Analog Raw Scan,ICCP Associated Value
+GT102 BASE LOAD CAPACITY,i0000ffebSROW,ANA-490-6-21-200800,Analog Raw Scan,ICCP Associated Value
+GT103 BASE LOAD CAPACITY,i0000fff0SROW,ANA-490-6-22-200801,Analog Raw Scan,ICCP Associated Value
+GT104 BASE LOAD CAPACITY,i0000fff5SROW,ANA-490-6-23-200802,Analog Raw Scan,ICCP Associated Value
+GT301 BASE LOAD CAPACITY,i0000fffaSROW,ANA-490-6-24-200803,Analog Raw Scan,ICCP Associated Value
+GT302 BASE LOAD CAPACITY,i0000ffffSROW,ANA-490-6-25-200804,Analog Raw Scan,ICCP Associated Value
+HPS SPINNING RES        ,i00010004SROW,                   ,Analog Raw Scan,ICCP Associated Value
+FIN71 MEGAWATTS         ,i00010009SROW,ANA-490-6-27-200805,Analog Raw Scan,ICCP Associated Value
+FIN71 MEGAVARS          ,i0001000eSROW,ANA-490-6-28-200806,Analog Raw Scan,ICCP Associated Value
+FIN71 VOLTS             ,i00010013SROW,ANA-490-6-29-200807,Analog Raw Scan,ICCP Associated Value
