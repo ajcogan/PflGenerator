@@ -2,7 +2,7 @@
 ##      PFL and SCADAPack Config Generation
 ##
 ##      Ashley Cogan 26/04/18
-##      Revision 4
+##      Revision 5
 ##      Python 2.7
 ##
 ##      1.0 - Basic Concept
@@ -14,6 +14,7 @@
 ##      4.0 - Time Stamping excecution of script
 ##          - Takes email as parameter for log file
 ##          - Take inverted status for Binary Inputs
+##		5.0 - Added Binary Counters Points to the CreatePoints function
 ##
 ##
 ##      Instructions:
@@ -29,8 +30,6 @@
 ##
 ##      -Place any file that modifies component attributes. Complete header information (header info must match name of component attribute). Data must be of format <Description, Component, Old Param1, Old Param2, New Param1, New Param2> (see template for more info).  
 ##          File must be labelled link%AI%.csv for analogue points and link%BI%.csv for binary points
-
-##TEST
 
 import csv
 import os
@@ -118,6 +117,10 @@ def addBinaryInput(index, description):
     j,k = indexConversion(int(index))    
     return [['3201'], [1,0,0,j,0,0,1,k,description, description, 'DNP Binary Input']]
 
+def addBinaryCounter(index, description):
+    ## PFL addition of Binary Counter (Card must be selected)   
+    return [['3201'], [20,0,0,index,0,0,32,0,description,description,'DNP Analog Input']]
+	
 def addBinaryOutput(index, description):
     ## PFL addition of Binary Output (Card must be selected)    
     return [['3300'], [12,1,0,index,0,0,description,'sDNP3 Control Plant']]
@@ -185,8 +188,7 @@ def createPoints(createList):
                 output.extend(selRtuCard(header[0],header[1]))
                 for point in data:
                     output.extend(addAnalogueInput(point[0],point[1]))
-                    
-            elif searchFor('BI',fileName):       
+            elif searchFor('BI',fileName):
             ##  Addition Of Binary Input Points
                 output.extend(addComment('Addition Of Binary Input Points from ' + fileName))
                 output.extend(selRtuCard(header[0],header[1]))
@@ -199,6 +201,13 @@ def createPoints(createList):
                             pass
                     except IndexError:
                         pass
+            elif searchFor('CI',fileName):
+            ##  Addition Of Binary Counter Points
+                output.extend(addComment('Addition Of Binary Counter Points from ' + fileName))
+                output.extend(selRtuCard(header[0],header[1]))
+                for point in data:
+                    output.extend(addBinaryCounter(point[0],point[1]))  			
+
             else:
                 pass
 
