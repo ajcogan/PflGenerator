@@ -14,7 +14,7 @@
 ##      4.0 - Time Stamping excecution of script
 ##          - Takes email as parameter for log file
 ##          - Take inverted status for Binary Inputs
-##		5.0 - Added Binary Counters Points to the CreatePoints function
+##	5.0 - Added Binary Counters Points to the CreatePoints function
 ##
 ##
 ##      Instructions:
