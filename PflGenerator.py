@@ -30,6 +30,8 @@
 ##      -Place any file that modifies component attributes. Complete header information (header info must match name of component attribute). Data must be of format <Description, Component, Old Param1, Old Param2, New Param1, New Param2> (see template for more info).  
 ##          File must be labelled link%AI%.csv for analogue points and link%BI%.csv for binary points
 
+##TEST
+
 import csv
 import os
 import datetime
