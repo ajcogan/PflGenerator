@@ -2,7 +2,7 @@
 ##      PFL and SCADAPack Config Generation
 ##
 ##      Ashley Cogan 26/04/18
-##      Revision 5
+##      Revision 6
 ##      Python 2.7
 ##
 ##      1.0 - Basic Concept
@@ -15,6 +15,8 @@
 ##          - Takes email as parameter for log file
 ##          - Take inverted status for Binary Inputs
 ##	5.0 - Added Binary Counters Points to the CreatePoints function
+##      6.0 - Modified ScadaPackParse() to also create link<AI/BI/CI> templates from RTU file
+##          - Modified createMain() to produce new .sh files for seperating points creation and linking
 ##
 ##
 ##      Instructions:
@@ -458,12 +460,21 @@ def createMain(emailAddr):
     ##
     ## Creates main.sh execution scripts that runs all the other scripts and generates log files
     ##
+    createPts = [['#!/bin/bash'],['runTime="$(date +%d/%m/%Y%tat%t%H:%M:%S)"'],['load_plant_file -o3 createPoints.pfl 2>&1 | tee createPoints.log'],['cat *.log* | mail -s "$runTime PFL Script Log" ' +emailAddr]]
+
+    linker = [['#!/bin/bash'],['runTime="$(date +%d/%m/%Y%tat%t%H:%M:%S)"'],['load_plant_file -o3 linker.pfl 2>&1 | tee linker.log'],['cat *.log* | mail -s "$runTime PFL Script Log" ' +emailAddr]]
+
+    attribMod = [['#!/bin/bash'],['runTime="$(date +%d/%m/%Y%tat%t%H:%M:%S)"'],['load_plant_file -o3 attributeMod.pfl 2>&1 | tee attributeMod.log'],['cat *.log* | mail -s "$runTime PFL Script Log" ' +emailAddr]]
+
     output = [['#!/bin/bash'],['runTime="$(date +%d/%m/%Y%tat%t%H:%M:%S)"'],['load_plant_file -o3 createPoints.pfl 2>&1 | tee createPoints.log'],
               ['load_plant_file -o3 linker.pfl 2>&1 | tee linker.log'],['load_plant_file -o3 attributeMod.pfl 2>&1 | tee attributeMod.log'],['cat *.log* | mail -s "$runTime PFL Script Log" ' +emailAddr]]
 
     backup = [['#!/bin/bash'],['runTime="$(date +%d/%m/%Y%tat%t%H:%M:%S)"'],['load_plant_file -o3 linker-rollback.pfl 2>&1 | tee linker-rollback.log'],
               ['load_plant_file -o3 attributeMod-rollback.pfl 2>&1 | tee attributeMod-rollback.log'],['cat *.log* | mail -s "$runTime PFL Script Log" ' + emailAddr]]
 
+    generalFileOut(createPts,"pflFiles/main/createPoints.sh")
+    generalFileOut(linker,"pflFiles/main/linker.sh")
+    generalFileOut(attribMod,"pflFiles/main/attribMod.sh")
     generalFileOut(output,"pflFiles/main/main.sh")
     generalFileOut(backup,"pflFiles/rollback/main-rollback.sh")
 
@@ -473,14 +484,14 @@ def generateLogFile():
     ##
     output = []
 
-    output.append(['PFL generated on ' + returnDT()[2] + ' using version 4.0 of PFL generator script by Ashley Cogan'])
+    output.append(['PFL generated on ' + returnDT()[2] + ' using version 5.0 of PFL generator script by Ashley Cogan'])
 
     generalFileOut(output,"pflFiles/pflGenerator.log")
     generalFileOut(output,"dataFiles/pflGenerator.log")
 
 def SCADAPackParse(deviceName):
     ##
-    ## Pulls point data from SCADAPack RTU configuration file
+    ## Pulls point data from SCADAPack RTU configuration file to form createList and linkList
     ##
     output = []
 
@@ -490,11 +501,16 @@ def SCADAPackParse(deviceName):
     processing = [[]]
     pointer = 0
 
-    AI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    BI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    CI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    BO = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']] 
+    cAI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
+    cBI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
+    cCI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
+    cBO = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']] 
 
+    lAI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
+    lBI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
+    lCI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
+    lBO = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
+    
     for line in data:
         if line[0] == 'TE':
             processing.append([])
@@ -514,25 +530,35 @@ def SCADAPackParse(deviceName):
             pass
         else:
             print point
-            if point[0][0] == 'PC':
+            if point[0][0] == 'PC' and point[0][1]!= '':
                 if point[0][2] == 'AI':
-                    AI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
-                elif point[0][2] == 'DI':
-                    BI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    cAI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    lAI.append([point[0][1].strip('"'),"",""])
+                elif point[0][2] == 'DI' and point[0][1].split("_")[2]!="SPARE":
+                    cBI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    lBI.append([point[0][1].strip('"'),"",""])
                 elif point[0][2] == 'CI':
-                    CI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    cCI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    lCI.append([point[0][1].strip('"'),"",""])
                 elif point[0][2] == 'DO':
-                    BO.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    cBO.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
+                    lBO.append([point[0][1].strip('"'),"",""])
                 else:
                     pass
             else:
                 pass
 
-    printToCSV(AI,"createAI.csv")
-    printToCSV(BI,"createBI.csv")
-    printToCSV(CI,"createCI.csv")
-    printToCSV(BO,"createBO.csv")
+    printToCSV(cAI,"createAI.csv")
+    printToCSV(cBI,"createBI.csv")
+    printToCSV(cCI,"createCI.csv")
+    printToCSV(cBO,"createBO.csv")
+    
+    printToCSV(lAI,"linkAI.csv")
+    printToCSV(lBI,"linkBI.csv")
+    printToCSV(lCI,"linkCI.csv")
+    printToCSV(lBO,"linkBO.csv")
 
+    
 def fileSorter():
 ##
 ##  File Sorter
@@ -574,14 +600,14 @@ if __name__ == '__main__':
     argList = sys.argv
 
     if len(argList) == 1:
-        print "\nUseage for autoConfigV3.py; \n\n \
+        print "\nUseage for PFLGenerator.py; \n\n \
     --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n \n"
+    --generatePFL <email@address.com> : Generate PFL files from table information \n\n "
 
     elif argList[1] == '--scadaPackParse':
         SCADAPackParse(argList[2])
         print "\n\nSCADAPack Parse Successful!!\n\n"
-        
+
     elif argList[1] == '--generatePFL':
         
         createList,breakList,linkList,attributeModList,csvList,miscList = fileSorter()
@@ -605,9 +631,11 @@ if __name__ == '__main__':
 
         print "\n\nPFL Generaton Successful!!\n\n"
     else:
-        print "\nUseage for autoConfigV3.py; \n\n \
+        print "\nUseage for PflGenerator.py; \n\n \
     --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n \n"
+    --generatePFL <email@address.com> : Generate PFL files from table information \n\n "
+
+
 
     
 
