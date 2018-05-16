@@ -489,7 +489,7 @@ def generateLogFile():
     generalFileOut(output,"pflFiles/pflGenerator.log")
     generalFileOut(output,"dataFiles/pflGenerator.log")
 
-def SCADAPackParse(deviceName):
+def SCADAPackParse(deviceName, rtuAlias, aiCardID, biCardID, ciCardID):
     ##
     ## Pulls point data from SCADAPack RTU configuration file to form createList and linkList
     ##
@@ -501,15 +501,15 @@ def SCADAPackParse(deviceName):
     processing = [[]]
     pointer = 0
 
-    cAI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    cBI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    cCI = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']]
-    cBO = [['RTU', 'CARD'],['',''],['',''],['Index', 'Description']] 
+    cAI = [['RTU', 'CARD'],[rtuAlias,aiCardID],['',''],['Index', 'Description']]
+    cBI = [['RTU', 'CARD'],[rtuAlias,biCardID],['',''],['Index', 'Description']]
+    cCI = [['RTU', 'CARD'],[rtuAlias,ciCardID],['',''],['Index', 'Description']]
+    cBO = [['RTU', 'CARD'],[rtuAlias,''],['',''],['Index', 'Description']] 
 
-    lAI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
-    lBI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
-    lCI = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
-    lBO = [['RTU', 'CARD'],['',''],['',''],['Description','Component','Attribute','Associated']]
+    lAI = [['RTU', 'CARD'],[rtuAlias,aiCardID],['',''],['Description','Component','Attribute','Associated']]
+    lBI = [['RTU', 'CARD'],[rtuAlias,biCardID],['',''],['Description','Component','Attribute','Associated']]
+    lCI = [['RTU', 'CARD'],[rtuAlias,ciCardID],['',''],['Description','Component','Attribute','Associated']]
+    lBO = [['RTU', 'CARD'],[rtuAlias,''],['',''],['Description','Component','Attribute','Associated']]
     
     for line in data:
         if line[0] == 'TE':
@@ -533,16 +533,16 @@ def SCADAPackParse(deviceName):
             if point[0][0] == 'PC' and point[0][1]!= '':
                 if point[0][2] == 'AI':
                     cAI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
-                    lAI.append([point[0][1].strip('"'),"",""])
+                    lAI.append([point[0][1].strip('"'),"",'Analog Raw Scan',""])
                 elif point[0][2] == 'DI' and point[0][1].split("_")[2]!="SPARE":
                     cBI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
-                    lBI.append([point[0][1].strip('"'),"",""])
+                    lBI.append([point[0][1].strip('"'),"",'Digital Scanned Value','Associated Scanned Value'])
                 elif point[0][2] == 'CI':
                     cCI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
-                    lCI.append([point[0][1].strip('"'),"",""])
+                    lCI.append([point[0][1].strip('"'),"",'Analog Raw Scan',""])
                 elif point[0][2] == 'DO':
                     cBO.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
-                    lBO.append([point[0][1].strip('"'),"",""])
+                    lBO.append([point[0][1].strip('"'),"",'Digital Scanned Value','Associated Scanned Value'])
                 else:
                     pass
             else:
@@ -605,7 +605,7 @@ if __name__ == '__main__':
     --generatePFL <email@address.com> : Generate PFL files from table information \n\n "
 
     elif argList[1] == '--scadaPackParse':
-        SCADAPackParse(argList[2])
+        SCADAPackParse(argList[2],argList[3], argList[4], argList[5], argList[6])
         print "\n\nSCADAPack Parse Successful!!\n\n"
 
     elif argList[1] == '--generatePFL':
