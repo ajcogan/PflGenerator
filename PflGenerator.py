@@ -17,6 +17,7 @@
 ##	5.0 - Added Binary Counters Points to the CreatePoints function
 ##      6.0 - Modified ScadaPackParse() to also create link<AI/BI/CI> templates from RTU file
 ##          - Modified createMain() to produce new .sh files for seperating points creation and linking
+##      7.0 - Added functionality to create cards along with points for new RTUs
 ##
 ##
 ##      Instructions:
@@ -110,6 +111,17 @@ def searchFor(part, whole):
     else:
         return False
 
+def addRTUCard(rtu, cardType):
+    ## Add new card based on cardType into selected RTU
+    if cardType == 'AI':
+        return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Anlogue Input']]
+    elif cardType == 'BI':
+        return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Digitial Input']] 
+    elif cardType == 'CI':
+        return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Binary Counter']]
+    else:
+        pass
+    
 def addAnalogueInput(index, description):
     ## PFL addition of Analogue Input (Card must be selected)   
     return [['3201'], [30,0,0,index,0,0,32,0,description,description,'DNP Analog Input']]
@@ -178,8 +190,8 @@ def createPoints(createList):
         header = raw[1]
         data = raw[4:]
 
-        if header[0] == '' or header[1] == '':
-            msgbox(msg='Please add RTU and Card parameters to "' + fileName + '" before proceeding.', title='Import Error - Incomplete Data')
+        if header[0] == '': ## or header[1] == '':
+            msgbox(msg='Please add RTU parameters to "' + fileName + '" before proceeding.', title='Import Error - Incomplete Data')
             dataCorrect = False
             break
         else:
@@ -187,17 +199,17 @@ def createPoints(createList):
             if searchFor('AI',fileName):
             ##  Addition Of Analogue Input Points
                 output.extend(addComment('Addition Of Analogue Input Points from ' + fileName))
-                output.extend(selRtuCard(header[0],header[1]))
+                output.extend(addRTUCard(header[0],'AI'))
                 for point in data:
                     output.extend(addAnalogueInput(point[0],point[1]))
             elif searchFor('BI',fileName):
             ##  Addition Of Binary Input Points
                 output.extend(addComment('Addition Of Binary Input Points from ' + fileName))
-                output.extend(selRtuCard(header[0],header[1]))
+                output.extend(addRTUCard(header[0],'BI'))
                 for point in data:
                     output.extend(addBinaryInput(point[0],point[1]))
                     try:
-                        if point[2]=='y':
+                        if point[2]=='y' or point[2]=='Y':
                             output.extend(updateProperty(point[1],'-8','scan config','WP_TELE_2STATE10'))
                         else:
                             pass
@@ -206,7 +218,7 @@ def createPoints(createList):
             elif searchFor('CI',fileName):
             ##  Addition Of Binary Counter Points
                 output.extend(addComment('Addition Of Binary Counter Points from ' + fileName))
-                output.extend(selRtuCard(header[0],header[1]))
+                output.extend(addRTUCard(header[0],'CI'))
                 for point in data:
                     output.extend(addBinaryCounter(point[0],point[1]))  			
 
@@ -551,12 +563,12 @@ def SCADAPackParse(deviceName, rtuAlias, aiCardID, biCardID, ciCardID):
     printToCSV(cAI,"createAI.csv")
     printToCSV(cBI,"createBI.csv")
     printToCSV(cCI,"createCI.csv")
-    printToCSV(cBO,"createBO.csv")
+##   printToCSV(cBO,"createBO.csv") ##Commented out as it is not required for IPP project
     
     printToCSV(lAI,"linkAI.csv")
     printToCSV(lBI,"linkBI.csv")
     printToCSV(lCI,"linkCI.csv")
-    printToCSV(lBO,"linkBO.csv")
+##    printToCSV(lBO,"linkBO.csv") ##Commented out as it is not required for IPP project
 
     
 def fileSorter():
