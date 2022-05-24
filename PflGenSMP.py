@@ -2,43 +2,43 @@
 ##      PFL and SCADAPack Config Generation
 ##
 ##      Ashley Cogan 26/04/18
-##      Revision 6
-##      Python 2.7
+##      Revision 2.0
+##      Python 3.9
 ##
 ##      1.0 - Basic Concept
-##      2.0 - Additional Layer of Abstraction
-##      2.1 - Cleaned Up Functions
-##      2.3 - Added scaling adjustment
-##      3.0 - Added automatic file collating functions
+##      1.1 - Additional Layer of Abstraction
+##      1.2 - Cleaned Up Functions
+##      1.3 - Added scaling adjustment
+##      1.4 - Added automatic file collating functions
 ##          - Made script work for multiple import files
-##      4.0 - Time Stamping excecution of script
+##      1.5 - Time Stamping excecution of script
 ##          - Takes email as parameter for log file
 ##          - Take inverted status for Binary Inputs
-##	5.0 - Added Binary Counters Points to the CreatePoints function
-##      6.0 - Modified ScadaPackParse() to also create link<AI/BI/CI> templates from RTU file
+##	    1.6 - Added Binary Counters Points to the CreatePoints function
+##      1.7 - Modified ScadaPackParse() to also create link<AI/BI/CI> templates from RTU file
 ##          - Modified createMain() to produce new .sh files for seperating points creation and linking
-##      7.0 - Added functionality to create cards along with points for new RTUs
-##
+##      1.8 - Added functionality to create cards along with points for new RTUs
+##      2.0 - Refractored for Python3
 ##
 ##      Instructions:
 ##
 ##      -Place any file that creates points in root directory. Complete header information. Data must be of format <Index, Description> (see template for more info).
 ##          File must be labelled create%AI%.csv for analogue points and create%BI%.csv for binary points
 ##
-##      -Place any file that breaks scan links in root directory. Complete header information. Data must be of format <Description, RowID, Component, Analog Raw Scan, ICCP Associated Value> (see template for more info).  
+##      -Place any file that breaks scan links in root directory. Complete header information. Data must be of format <Description, RowID, Component, Analog Raw Scan, ICCP Associated Value> (see template for more info).
 ##          File must be labelled break%AI%.csv for analogue points and break%BI%.csv for binary points
 ##
-##      -Place any file that creates scan links in root directory. Complete header information. Data must be of format <Description, Component, Analog Raw Scan, ICCP Associated Value> (see template for more info).  
+##      -Place any file that creates scan links in root directory. Complete header information. Data must be of format <Description, Component, Analog Raw Scan, ICCP Associated Value> (see template for more info).
 ##          File must be labelled link%AI%.csv for analogue points and link%BI%.csv for binary points
 ##
-##      -Place any file that modifies component attributes. Complete header information (header info must match name of component attribute). Data must be of format <Description, Component, Old Param1, Old Param2, New Param1, New Param2> (see template for more info).  
+##      -Place any file that modifies component attributes. Complete header information (header info must match name of component attribute). Data must be of format <Description, Component, Old Param1, Old Param2, New Param1, New Param2> (see template for more info).
 ##          File must be labelled link%AI%.csv for analogue points and link%BI%.csv for binary points
 
 import csv
 import os
 import datetime
-from os.path import basename
-from easygui import msgbox
+# from os import path.basename as basename
+# from easygui import msgbox
 import sys
 
 def indexConversion(index):
@@ -64,18 +64,19 @@ def importData(fileName):
     ## Import and clean the RTU data from a csv file
     ## Input: fileName, Returns: A list of lines
     rawData = []
-    dat = file(fileName,'r')
-    for x in dat: 
+    dat = open(fileName,'r')
+    for x in dat:
         rawData.append(x.strip('\n'))
+    dat.close()
     return rawData
-                
+
 def printToCSV(data,svFile):
     ## General writer to CSV file
-    with open(svFile, 'wb') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=',',
+    with open(svFile, 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',',
                         quoting=csv.QUOTE_MINIMAL)
         for x in data:
-            spamwriter.writerow(x)
+            writer.writerow(x)
     csvfile.close()
 
 def generalFileOut(data,svFile):
@@ -94,7 +95,7 @@ def cleanup(files,directory):
     ## Moves all files into specified directory after execution
     for file in files:
         os.rename("./"+file,"./"+directory+"/"+file)
-        print file
+        print(file)
 
 def returnDT():
     ## Returns date and time in different formats
@@ -116,41 +117,41 @@ def addRTUCard(rtu, cardType):
     if cardType == 'AI':
         return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Anlogue Input']]
     elif cardType == 'BI':
-        return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Digitial Input']] 
+        return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Digitial Input']]
     elif cardType == 'BO':
-        return [['3000'], [rtu], ['3100'], [1, 2, 'sDNP3 Digitial Output']] 
+        return [['3000'], [rtu], ['3100'], [1, 2, 'sDNP3 Digitial Output']]
     elif cardType == 'CI':
         return [['3000'], [rtu], ['3100'], [0, 2, 'sDNP3 Binary Counter']]
     else:
         pass
-    
+
 def addAnalogueInput(index, description):
-    ## PFL addition of Analogue Input (Card must be selected)   
+    ## PFL addition of Analogue Input (Card must be selected)
     return [['3201'], [30,0,0,index,0,0,32,0,description,description,'DNP Analog Input']]
 
 def addBinaryInput(index, description):
     ## PFL addition of Binary Input (Card must be selected)
-    j,k = indexConversion(int(index))    
+    j,k = indexConversion(int(index))
     return [['3201'], [1,0,0,j,0,0,1,k,description, description, 'DNP Digital Input']]
 
 def addBinaryCounter(index, description):
-    ## PFL addition of Binary Counter (Card must be selected)   
+    ## PFL addition of Binary Counter (Card must be selected)
     return [['3201'], [20,0,0,index,0,0,32,0,description,description,'DNP Analog Input']]
-	
+
 def addBinaryOutput(index, description):
-    ## PFL addition of Binary Output (Card must be selected)    
+    ## PFL addition of Binary Output (Card must be selected)
     return [['3300'], [12,1,0,index,0,0,description,'sDNP3 Control Plant']]
 
 def addComment(comment):
-    ## Adds a comment to PFL script 
+    ## Adds a comment to PFL script
     return [['999'],[comment]]
 
 def selRtuCard(rtu, card):
-    ## Selects and active RTU and Card (to then add points to)    
+    ## Selects and active RTU and Card (to then add points to)
     return [['3000'], [rtu], ['3103'], [card]]
 
 def endScript():
-    ## Identifier for end of script   
+    ## Identifier for end of script
     return [['0'], ['ENDSEC']]
 
 def delScanLink_RID(rowID, component, attribute,*associated):
@@ -158,9 +159,9 @@ def delScanLink_RID(rowID, component, attribute,*associated):
     return [['3203'], [rowID], ['3501'], [component, attribute]+list(associated)]
 
 def delScanLink_NAME(name, component, attribute, *associated):
-     ## Delete a scan link base on link name (Card must be selected and name defined by user)  
+     ## Delete a scan link base on link name (Card must be selected and name defined by user)
     return [['3202'], [name], ['3501'], [component, attribute]+list(associated)]
-    
+
 def newScanLink_RID(rowID, component, attribute, *associated):
     ## Add a scan link base on row ID (Card must be selected)
     return [['3203'],[rowID],['3500'],[component,attribute]+list(associated)]
@@ -182,12 +183,12 @@ def createPoints(createList):
 ##
 ##  Create Points
 ##
-    
+
     output = []
     dataCorrect = True
 
     for fileName in createList:
-    
+
         raw = dataSeperator(importData(fileName))
         header = raw[1]
         data = raw[4:]
@@ -228,16 +229,16 @@ def createPoints(createList):
                 output.extend(addComment('Addition Of Binary Counter Points from ' + fileName))
                 output.extend(addRTUCard(header[0],'CI'))
                 for point in data:
-                    output.extend(addBinaryCounter(point[0],point[1]))  			
+                    output.extend(addBinaryCounter(point[0],point[1]))
 
             else:
                 pass
 
-    if dataCorrect:    
+    if dataCorrect:
     ##  End of Script
         output.extend(addComment('End of Script'))
         output.extend(endScript())
-        
+
         printToCSV(output,"pflFiles/main/createPoints.pfl")
     else:
         pass
@@ -251,8 +252,8 @@ def createLinker(breakList,linkList):
     output = []
     dataCorrect = True
 
-##  Breaking Links    
-    
+##  Breaking Links
+
     for fileName in breakList:
 
         raw = dataSeperator(importData(fileName))
@@ -292,11 +293,11 @@ def createLinker(breakList,linkList):
             else:
                 pass
 
-        
+
 ##  Recreating Links
 
     for fileName in linkList:
-    
+
         raw = dataSeperator(importData(fileName))
         header = raw[1]
         data = raw[4:]
@@ -315,7 +316,7 @@ def createLinker(breakList,linkList):
                         output.extend(newScanLink_NAME(point[0],point[1],point[2],point[3]))
                     except IndexError:
                         output.extend(newScanLink_NAME(point[0],point[1],point[2]))
-            elif searchFor('BI',fileName): 
+            elif searchFor('BI',fileName):
                 output.extend(addComment('Creating Links Binary Inputs from ' + fileName))
                 output.extend(selRtuCard(header[0],header[1]))
                 for point in data:
@@ -323,7 +324,7 @@ def createLinker(breakList,linkList):
                         output.extend(newScanLink_NAME(point[0],point[1],point[2],point[3]))
                     except IndexError:
                         output.extend(newScanLink_NAME(point[0],point[1],point[2]))
-            elif searchFor('CI',fileName): 
+            elif searchFor('CI',fileName):
                 output.extend(addComment('Creating Links Counter Inputs from ' + fileName))
                 output.extend(selRtuCard(header[0],header[1]))
                 for point in data:
@@ -352,7 +353,7 @@ def createRollback(breakList,linkList):
     dataCorrect = True
 
 
-##  Breaking Links 
+##  Breaking Links
     for fileName in linkList:
 
         raw = dataSeperator(importData(fileName))
@@ -373,7 +374,7 @@ def createRollback(breakList,linkList):
                         backup.extend(delScanLink_NAME(point[0],point[1],point[2],point[3]))
                     except IndexError:
                         backup.extend(delScanLink_NAME(point[0],point[1],point[2]))
-            elif searchFor('BI',fileName):        
+            elif searchFor('BI',fileName):
                 backup.extend(addComment('Breaking Links Binary Inputs ' + fileName))
                 backup.extend(selRtuCard(header[0],header[1]))
                 for point in data:
@@ -381,7 +382,7 @@ def createRollback(breakList,linkList):
                         backup.extend(delScanLink_NAME(point[0],point[1],point[2],point[3]))
                     except IndexError:
                         backup.extend(delScanLink_NAME(point[0],point[1],point[2]))
-            elif searchFor('CI',fileName):        
+            elif searchFor('CI',fileName):
                 backup.extend(addComment('Breaking Links Counter Inputs ' + fileName))
                 backup.extend(selRtuCard(header[0],header[1]))
                 for point in data:
@@ -452,7 +453,7 @@ def attributeModifier(attributeModList):
     dataCorrect = True
 
     for fileName in attributeModList:
-    
+
         raw = dataSeperator(importData(fileName))
         header = raw[0]
         data = raw[1:]
@@ -524,13 +525,13 @@ def SCADAPackParse(deviceName, rtuAlias, aiCardID, biCardID, ciCardID):
     cAI = [['RTU', 'CARD'],[rtuAlias,aiCardID],['',''],['Index', 'Description']]
     cBI = [['RTU', 'CARD'],[rtuAlias,biCardID],['',''],['Index', 'Description']]
     cCI = [['RTU', 'CARD'],[rtuAlias,ciCardID],['',''],['Index', 'Description']]
-    cBO = [['RTU', 'CARD'],[rtuAlias,''],['',''],['Index', 'Description']] 
+    cBO = [['RTU', 'CARD'],[rtuAlias,''],['',''],['Index', 'Description']]
 
     lAI = [['RTU', 'CARD'],[rtuAlias,aiCardID],['',''],['Description','Component','Attribute','Associated']]
     lBI = [['RTU', 'CARD'],[rtuAlias,biCardID],['',''],['Description','Component','Attribute','Associated']]
     lCI = [['RTU', 'CARD'],[rtuAlias,ciCardID],['',''],['Description','Component','Attribute','Associated']]
     lBO = [['RTU', 'CARD'],[rtuAlias,''],['',''],['Description','Component','Attribute','Associated']]
-    
+
     for line in data:
         if line[0] == 'TE':
             processing.append([])
@@ -549,7 +550,7 @@ def SCADAPackParse(deviceName, rtuAlias, aiCardID, biCardID, ciCardID):
         except IndexError:
             pass
         else:
-            print point
+            print(point)
             if point[0][0] == 'PC' and point[0][1]!= '':
                 if point[0][2] == 'AI':
                     cAI.append([point[1][0].split(" ")[1],point[0][1].strip('"')])
@@ -572,13 +573,13 @@ def SCADAPackParse(deviceName, rtuAlias, aiCardID, biCardID, ciCardID):
     printToCSV(cBI,"createBI.csv")
     printToCSV(cCI,"createCI.csv")
 ##   printToCSV(cBO,"createBO.csv") ##Commented out as it is not required for IPP project
-    
+
     printToCSV(lAI,"linkAI.csv")
     printToCSV(lBI,"linkBI.csv")
     printToCSV(lCI,"linkCI.csv")
 ##    printToCSV(lBO,"linkBO.csv") ##Commented out as it is not required for IPP project
 
-    
+
 def fileSorter():
 ##
 ##  File Sorter
@@ -610,8 +611,8 @@ def fileSorter():
             miscList.append(name)
 
     return createList,breakList,linkList,attributeModList,csvList,miscList
-    
-      
+
+
 if __name__ == '__main__':
 ##
 ##      MAIN FUNCTION
@@ -619,64 +620,52 @@ if __name__ == '__main__':
 
     argList = sys.argv
     createList,breakList,linkList,attributeModList,csvList,miscList = fileSorter()
-    
+
     if len(argList) == 1:
-        print "\nUseage for PFLGenerator.py; \n\n \
+        print("\nUseage for PFLGenerator.py; \n\n \
     --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n\n "
+    --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")
 
     elif argList[1] == '--scadaPackParse':
         SCADAPackParse(argList[2],argList[3], argList[4], argList[5], argList[6])
-        print "\n\nSCADAPack Parse Successful!!\n\n"
+        print("\n\nSCADAPack Parse Successful!!\n\n")
 
     elif argList[1] == '--genCreate':
         os.makedirs("pflFiles")
         os.makedirs("pflFiles/main")
         os.makedirs("pflFiles/rollback")
         os.makedirs("dataFiles")
-                
+
         createPoints(createList)
 
         createMain(argList[2])
-        
+
         cleanup(csvList,"dataFiles")
 
         generateLogFile()
 
-        print "\n\nPFL Generaton Successful!!\n\n"
+        print("\n\nPFL Generaton Successful!!\n\n")
 
     elif argList[1] == '--genAll':
         os.makedirs("pflFiles")
         os.makedirs("pflFiles/main")
         os.makedirs("pflFiles/rollback")
         os.makedirs("dataFiles")
-        
-        
+
+
         createPoints(createList)
         createLinker(breakList,linkList)
         createRollback(breakList,linkList)
         attributeModifier(attributeModList)
 
         createMain(argList[2])
-        
+
         cleanup(csvList,"dataFiles")
 
         generateLogFile()
 
-        print "\n\nPFL Generaton Successful!!\n\n"
+        print("\n\nPFL Generaton Successful!!\n\n")
     else:
-        print "\nUseage for PflGenerator.py; \n\n \
+        print("\nUseage for PflGenerator.py; \n\n \
     --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n\n "
-
-
-
-    
-
-
-
-
-
-
-
-
+    --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")
