@@ -40,6 +40,7 @@ import datetime
 # from os import path.basename as basename
 # from easygui import msgbox
 import sys
+# from schema.horizon import PFLCreator
 
 def indexConversion(index):
     return index/32, index%32
@@ -127,12 +128,14 @@ def addRTUCard(rtu, cardType):
 
 def addAnalogueInput(index, description):
     ## PFL addition of Analogue Input (Card must be selected)
-    return [['3201'], [30,0,0,index,0,0,32,0,description,description,'DNP Analog Input']]
+    return [['3201'], [30,0,0,index,0,0,32,0,description,description,'DNP Analog Input']] # Horizon Power
+    # return [['3201'], [30,0,0,index,0,0,32,0,description,description,'DNP Analog Input']] # Aurora
 
 def addBinaryInput(index, description):
     ## PFL addition of Binary Input (Card must be selected)
     j,k = indexConversion(int(index))
-    return [['3201'], [1,0,0,j,0,0,1,k,description, description, 'DNP Digital Input']]
+    return [['3201'], [1,0,0,j,0,0,1,k,description, description, 'DNP Digital Input']] # Horizon Power
+    # return [['3201'], [1,0,0,j,0,0,1,k,description, description, 'DNP3 Digital 2State Normal']] # Aurora
 
 def addBinaryCounter(index, description):
     ## PFL addition of Binary Counter (Card must be selected)
@@ -178,6 +181,11 @@ def updateProperty(name, propertyID, component, attribute):
     ## Modify the value of selected property of a scan link
     return [['3400'],[propertyID],['3202'],[name],['3402'],[component, attribute]]
 
+def updateScanRowIndex(rowID, word, shift, description = ""):
+    if description != "":
+        return [['3203'],[rowID],['3205'],['SCAN_ADDR3',word],['3205'],['SCAN_SHIFT',shift],['3205'],['SCAN_DESCRIPTION',description]]
+    else:
+        return [['3203'],[rowID],['3205'],['SCAN_ADDR3',word],['3205'],['SCAN_SHIFT',shift]]
 
 def createPoints(createList):
 ##
@@ -477,6 +485,44 @@ def attributeModifier(attributeModList):
     else:
         pass
 
+def indexUpdater(indexUpdaterList):
+
+    output = []
+    backup = []
+    dataCorrect = True
+
+    for fileName in indexUpdaterList:
+
+        raw = dataSeperator(importData(fileName))
+        header = raw[1]
+        data = raw[4:]
+
+        output = []
+        rollback = []
+
+        if header[0] == '' or header[1] == '':
+            msgbox(msg='Please add RTU and Card parameters to "' + fileName + '" before proceeding.', title='Import Error - Incomplete Data')
+            dataCorrect = False
+            break
+
+        else:
+            output.extend(addComment('Modifying indexes from: ' + fileName))
+            rollback.extend(addComment('Rollback indexes from: ' + fileName))
+            output.extend(selRtuCard(header[0],header[1]))
+            rollback.extend(selRtuCard(header[0],header[1]))
+
+            for point in data:
+                output.extend(updateScanRowIndex(point[1], point[6], point[7]))
+                rollback.extend(updateScanRowIndex(point[1], point[3], point[4]))
+
+        if dataCorrect:
+            output.extend(endScript())
+            rollback.extend(endScript())
+            printToCSV(output,"pflFiles/main/indexUpdater.pfl")
+            printToCSV(rollback,"pflFiles/rollback/indexUpdater-rollback.pfl")
+        else:
+            pass
+
 def createMain(emailAddr):
     ##
     ## Creates main.sh execution scripts that runs all the other scripts and generates log files
@@ -617,55 +663,107 @@ if __name__ == '__main__':
 ##
 ##      MAIN FUNCTION
 ##
+    # fileName = "aurora.csv"
+    #
+    # raw = dataSeperator(importData(fileName))
+    # header = raw[1]
+    # data = raw[4:]
+    #
+    # output = []
+    # rollback = []
+    #
+    # if header[0] == '' or header[1] == '':
+    #     msgbox(msg='Please add RTU and Card parameters to "' + fileName + '" before proceeding.', title='Import Error - Incomplete Data')
+    #     dataCorrect = False
+    #
+    # else:
+    #     output.extend(addComment('Modifying indexes from: ' + fileName))
+    #     rollback.extend(addComment('Rollback indexes from: ' + fileName))
+    #     output.extend(selRtuCard(header[0],header[1]))
+    #     rollback.extend(selRtuCard(header[0],header[1]))
+    #
+    #     for point in data:
+    #         output.extend(updateScanRowIndex(point[0], point[7], point[8], point[5]))
+    #         rollback.extend(updateScanRowIndex(point[0], point[3], point[4], point[1]))
+    #
+    #     output.extend(endScript())
+    #     rollback.extend(endScript())
+    #
+    #     printToCSV(output,"output.pfl")
+    #     printToCSV(rollback,"rollback.pfl")
 
-    argList = sys.argv
     createList,breakList,linkList,attributeModList,csvList,miscList = fileSorter()
 
-    if len(argList) == 1:
-        print("\nUseage for PFLGenerator.py; \n\n \
-    --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")
+    os.makedirs("pflFiles")
+    os.makedirs("pflFiles/main")
+    os.makedirs("pflFiles/rollback")
+    os.makedirs("dataFiles")
 
-    elif argList[1] == '--scadaPackParse':
-        SCADAPackParse(argList[2],argList[3], argList[4], argList[5], argList[6])
-        print("\n\nSCADAPack Parse Successful!!\n\n")
+    createPoints(createList)
+    createLinker(breakList,linkList)
+    createRollback(breakList,linkList)
+    attributeModifier(attributeModList)
 
-    elif argList[1] == '--genCreate':
-        os.makedirs("pflFiles")
-        os.makedirs("pflFiles/main")
-        os.makedirs("pflFiles/rollback")
-        os.makedirs("dataFiles")
+    # createMain('argList[2]')
 
-        createPoints(createList)
+    cleanup(csvList,"dataFiles")
 
-        createMain(argList[2])
+    generateLogFile()
 
-        cleanup(csvList,"dataFiles")
-
-        generateLogFile()
-
-        print("\n\nPFL Generaton Successful!!\n\n")
-
-    elif argList[1] == '--genAll':
-        os.makedirs("pflFiles")
-        os.makedirs("pflFiles/main")
-        os.makedirs("pflFiles/rollback")
-        os.makedirs("dataFiles")
+    print("\n\nPFL Generaton Successful!!\n\n")
 
 
-        createPoints(createList)
-        createLinker(breakList,linkList)
-        createRollback(breakList,linkList)
-        attributeModifier(attributeModList)
 
-        createMain(argList[2])
 
-        cleanup(csvList,"dataFiles")
 
-        generateLogFile()
-
-        print("\n\nPFL Generaton Successful!!\n\n")
-    else:
-        print("\nUseage for PflGenerator.py; \n\n \
-    --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
-    --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")
+    # argList = sys.argv
+    # createList,breakList,linkList,attributeModList,csvList,miscList = fileSorter()
+    #
+    # if len(argList) == 1:
+    #     print("\nUseage for PFLGenerator.py; \n\n \
+    # --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
+    # --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")
+    #
+    # elif argList[1] == '--scadaPackParse':
+    #     SCADAPackParse(argList[2],argList[3], argList[4], argList[5], argList[6])
+    #     print("\n\nSCADAPack Parse Successful!!\n\n")
+    #
+    # elif argList[1] == '--genCreate':
+    #     os.makedirs("pflFiles")
+    #     os.makedirs("pflFiles/main")
+    #     os.makedirs("pflFiles/rollback")
+    #     os.makedirs("dataFiles")
+    #
+    #     createPoints(createList)
+    #
+    #     createMain(argList[2])
+    #
+    #     cleanup(csvList,"dataFiles")
+    #
+    #     generateLogFile()
+    #
+    #     print("\n\nPFL Generaton Successful!!\n\n")
+    #
+    # elif argList[1] == '--genAll':
+    #     os.makedirs("pflFiles")
+    #     os.makedirs("pflFiles/main")
+    #     os.makedirs("pflFiles/rollback")
+    #     os.makedirs("dataFiles")
+    #
+    #
+    #     createPoints(createList)
+    #     createLinker(breakList,linkList)
+    #     createRollback(breakList,linkList)
+    #     attributeModifier(attributeModList)
+    #
+    #     createMain(argList[2])
+    #
+    #     cleanup(csvList,"dataFiles")
+    #
+    #     generateLogFile()
+    #
+    #     print("\n\nPFL Generaton Successful!!\n\n")
+    # else:
+    #     print("\nUseage for PflGenerator.py; \n\n \
+    # --scadaPackParse <filename> : Generate POF import tables from ScadaPack.rtu file \n \
+    # --generatePFL <email@address.com> : Generate PFL files from table information \n\n ")

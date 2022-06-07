@@ -1,0 +1,84 @@
+﻿RTU, CARD,,
+MC_RTU,G00000697CARD,,
+,,,
+Index,Description,Invert?,Long Description
+0,COMMS_FAIL,y              ,ABB RTU COMMS FAIL
+4,SW3188_INT_LOCK_ACTIVE,y,Switch 1 Interlocks active. TRUE if cable box cover is OFF or selector handle is NOT vertical
+10,SW3188_Position_FAULT,y,Switch 1 position indication fault. TRUE if switch status is indeterminate
+11,SW3188_READY_LocalOP,y,Switch 1 ready for local operation. TRUE if the below criteria are met
+12,SW3188_READY_REMOTE_OP,y          ,Switch 1 ready for remote operation. TRUE if the below criteria are met
+13,SW3188_MOTOR_FAULT,y           ,Switch 1 motor fault. TRUE if the motor drive has attempted to operate the switch for 15 seconds without a change in switch status
+14,SW3188_EARTH_DPI ,y           ,"Switch 1 in EARTH - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+16,SW3188_CLOSED _DPI,y      ,"Switch 1 CLOSED - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+18,SW3188_ EFI_FAULT,y           ,Switch 1 EFI fault. TRUE if an internal fault is active in the EFI
+19,SW3188_PH_FAULT,y           ,Switch 1 phase fault. TRUE if a phase fault has occurred
+20,SW3188_EARTH_FAULT,y           ,Switch 1 earth fault TRUE if an earth fault has occurred
+21,SW3188_L1_FAULT,y     ,Switch 1 L1 fault. TRUE if a phase or earth fault has occurred on L1
+22,SW3188_L2_FAULT,y                ,Switch 1 L2 fault. TRUE if a phase or earth fault has occurred on L2
+23,SW3188_L3_FAULT,y                ,Switch 1 L3 fault. TRUE if a phase or earth fault has occurred on L3
+24,SW3188_UNDER_V,y                ,Switch 1 Under voltage. TRUE if switch 1 is below set threshold – point must be enabled in FPI
+25,SW3188_PHASE_FAULT_IN,y                ,Switch 1 phase fault incoming (direction A). TRUE if phase fault is incoming
+26,SW3188_PHASE_FAULT_OUT,y                ,Switch 1 phase fault outgoing (direction B). TRUE if phase fault is outgoing
+27,SW3188_ EARTH_FAULT_IN,y                ,Switch 1 earth fault incoming (direction A). TRUE if earth fault is incoming
+28,SW3188_EARTH_FAULT_OUT,y                ,Switch 1 earth fault outgoing (direction B). TRUE if earth fault is outgoing
+33,FS3187_INT_LOCK_ACTIVE,y                ,Switch 2 Interlocks active. TRUE if cable box cover is OFF or selector handle is NOT vertical
+39,FS3187_POS_FLT,y,Switch 2 position indication fault. TRUE if switch status is indeterminate
+40,FS3187_ READY_ LOCAL_OP,y,Switch 2 ready for local operation. TRUE if the below criteria are met
+41,FS3187_READY_ REMOTE_OP,y                ,Switch 2 ready for remote operation. TRUE if the below criteria are met
+42,FS3187_MOTOR_FAULT,y                ,Switch 2 motor fault. TRUE if the motor drive has attempted to operate the switch for 15 seconds without a change in switch status
+43,FS3187_EARTH_DPI,y,"Switch 2 in EARTH - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+45,FS3187_CLOSED_ DPI,y,"Switch 2 CLOSED - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+47,FS3187_FUSE_ERROR,y                ,Switch 2 fuse blown. TRUE if any fuse has blown on switch 2
+48,FS3187_ EFI_FAULT,y                ,Switch 2 EFI fault. TRUE if an internal fault is active in the EFI
+49,FS3187_ PHASE_FAULT,y,Switch 2 phase fault. TRUE if a phase fault has occurred
+50,FS3187_EARTH_FAULT,y                ,Switch 2 earth fault TRUE if an earth fault has occurred
+51,FS3187_ L1_FAULT ,y                ,Switch 2 L1 fault. TRUE if a phase or earth fault has occurred on L1
+52,FS3187_ L2_FAULT,y,Switch 2 L2 fault. TRUE if a phase or earth fault has occurred on L2
+53,FS3187_ L3_FAULT,y,Switch 2 L3 fault. TRUE if a phase or earth fault has occurred on L3
+54,FS3187_UNDER_V,y                ,Switch 2 Under voltage. TRUE if Switch 2 is below set threshold – point must be enabled in FPI
+55,FS3187_ PHASE_FAULT_IN,y                ,Switch 2 phase fault incoming (direction A). TRUE if phase fault is incoming
+56,FS3187_PHASE_FAULT_OUT,y           ,Switch 2 phase fault outgoing (direction B). TRUE if phase fault is outgoing
+57,FS3187_EARTH_FAULT_IN,y,Switch 2 earth fault incoming (direction A). TRUE if earth fault is incoming
+58,FS3187_EARTH_FAULT_OUT,y           ,Switch 2 earth fault outgoing (direction B). TRUE if earth fault is outgoing
+63,SW3186_INT_LOCK_ACTIVE. ,y,Switch 3 Interlocks active. TRUE if cable box cover is OFF or selector handle is NOT vertical
+69,SW3186_PI_FLT,y,Switch 3 position indication fault. TRUE if switch status is indeterminate
+70,SW3186_ READY_ LOCAL_OP,y                ,Switch 3 ready for local operation. TRUE if the below criteria are met
+71,SW3186_READY_ REMOTE_OP,y                ,Switch 3 ready for remote operation. TRUE if the below criteria are met
+72,SW3186_MOTOR_FAULT,y,Switch 3 motor fault. TRUE if the motor drive has attempted to operate the switch for 15 seconds without a change in switch status
+73,SW3186_EARTH_DPI,y,"Switch 3 in EARTH - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+75,SW3186_CLOSED_ DPI,y,"Switch 3 CLOSED - DPI (01 = TRUE, 10 = FALSE) Bit 1"
+77,SW3186_EFI_FAULT,y               ,Switch 3 EFI fault. TRUE if an internal fault is active in the EFI
+78,SW3186_ PHASE_FAULT,y                ,Switch 3 phase fault. TRUE if a phase fault has occurred
+79,SW3186_EARTH_FAULT,y,Switch 3 earth fault TRUE if an earth fault has occurred
+80,SW3186_ L1_FAULT ,y                ,Switch 3 L1 fault. TRUE if a phase or earth fault has occurred on L1
+81,SW3186_ L2_FAULT,y                ,Switch 3 L2 fault. TRUE if a phase or earth fault has occurred on L2
+82,SW3186_ L3_FAULT,y,Switch 3 L3 fault. TRUE if a phase or earth fault has occurred on L3
+83,SW3186_UNDER_V,y                ,Switch 3 Under voltage. TRUE if Switch 3 is below set threshold – point must be enabled in FPI
+84,SW3186_ PHASE_FAULT_IN,y                ,Switch 3 phase fault incoming (direction A). TRUE if phase fault is incoming
+85,SW3186_PHASE_FAULT_OUT,y                ,Switch 3 phase fault outgoing (direction B). TRUE if phase fault is outgoing
+86,SW3186_EARTH_FAULT_IN,y                ,Switch 3 earth fault incoming (direction A). TRUE if earth fault is incoming
+87,SW3186_EARTH_FAULT_OUT,y                ,Switch 3 earth fault outgoing (direction B). TRUE if earth fault is outgoing
+135,SF6_LT,y                ,SF6 lockout (3 second delay). FALSE if SF6 density <1.1 bar (abs)
+136,SF6_LOW_PA,n    ,SF6 low pressure (30 second delay). FALSE if SF6 density <1.15 bar (abs)
+137,DOOR_OPEN,y,Enclosure door open. TRUE if outdoor enclosure door is OPEN
+138,SCADA_ON,y,SCADA On. True if Remote mode is selected with the Local/Remote selector
+139,RELAY_OUT_FLT,y        ,"Output Relay Check Fault. TRUE if a closed output relay is found prior to, or during a switching operation"
+140,RELAY_TIMEOUT,y,Go-Relay timeout. TRUE if there has been no response from the Go-Relay
+141,SL1_ENABLED,y,SL1 operation enabled. TRUE if Automation system set for SafeLink 1 operation. Default value is FALSE
+142,RELAY_DISABLED,y        ,Go-Relay disabled. TRUE if GO-Relay has been disabled. Default value is FALSE
+143,RELAY_OK,y,Go-Relay energised. TRUE if the Go-Relay has been energized
+144,SW3188_RTU_COMMS_FAIL,y,"Switch 1 Compass B - RTU Modbus communication failure, TRUE if Compass B - RTU Modbus communications have failed"
+145,FS3187_RTU_COMMS_FAIL,y        ,"Switch 2 Compass B - RTU Modbus communication failure, TRUE if Compass B - RTU Modbus communications have failed"
+146,SW3186_RTU_COMMS_FAIL,y        ,"Switch 3 Compass B - RTU Modbus communication failure, TRUE if Compass B - RTU Modbus communications have failed"
+148,DZC_RTU_COMMS_FAIL,y,DZC-RTU Modbus communication failure. TRUE if DZC-RTU Modbus communications have failed
+149,DI_IN_CARD_FLT,y        ,Digital input card fault. TRUE if the digital input card has registered a fault
+150,DI_OUT_CARD_FLT,y,Digital output card fault. TRUE if the digital output card has registered a fault
+86,BHP P.S PROTECTION,y     ,
+38,7305,y,
+39,7305.7,y,
+42,7305.4A,y                ,
+43,7305.4B,y                ,
+44,7305.5,y,
+72,SYS FREQ CONTROL,y       ,
+76,FIN-42,y                 ,
+80,FIN-52,y                 ,
